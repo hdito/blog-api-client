@@ -5,6 +5,7 @@ import { blogApi } from '@/utils/blogApi'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
+import { DateTime } from 'luxon'
 
 const userStore = useUserStore()
 
@@ -66,31 +67,81 @@ const publishedPosts = computed(() => {
 </script>
 
 <template>
-  <RouterLink to="/new-post">Create new post</RouterLink>
+  <RouterLink
+    class="mb-4 block max-w-fit rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md"
+    to="/new-post"
+  >
+    Create new post
+  </RouterLink>
   <div v-if="status === 'loading'">Loading...</div>
-  <div v-else-if="status === 'error'">Error has occured on loading posts. Try again later.</div>
+  <div
+    class="w-fit rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
+    v-else-if="status === 'error'"
+  >
+    Error has occured on loading posts. Try again later.
+  </div>
   <template v-if="status === 'success'">
     <div>
-      <h2>Published posts</h2>
+      <h2 class="mb-2 text-2xl font-bold">Published posts</h2>
       <div v-if="publishedPosts.length === 0">You haven't got any published posts</div>
-      <div v-else>
+      <div class="mb-6 flex flex-col gap-4" v-else>
         <div v-for="post in publishedPosts" :key="post._id">
-          <h3>{{ post.title }}</h3>
-          <button @click="() => unpublishPost(post._id)">Unpublish</button>
-          <RouterLink :to="`/edit/${post._id}`">Edit</RouterLink>
-          <button @click="() => deletePost(post._id)">Delete</button>
+          <h3 class="font-bold">{{ post.title }}</h3>
+          <p class="italic">
+            {{ DateTime.fromISO(post.createdAt).toLocaleString(DateTime.DATE_FULL) }}
+          </p>
+          <p v-if="post.description">{{ post.description }}</p>
+          <div class="mt-2 flex items-center gap-4">
+            <button
+              class="rounded-md border border-sky-900 px-2 py-1 hover:shadow-md"
+              @click="() => unpublishPost(post._id)"
+            >
+              Unpublish
+            </button>
+            <RouterLink
+              class="rounded-md border border-emerald-700 px-2 py-1 text-emerald-700 hover:shadow-md"
+              :to="`/edit/${post._id}`"
+              >Edit</RouterLink
+            >
+            <button
+              class="rounded-md border border-rose-900 px-2 py-1 text-rose-900 hover:shadow-md"
+              @click="() => deletePost(post._id)"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
     </div>
     <div>
-      <h2>Unpublished posts</h2>
-      <div v-if="unpublishedPosts.length === 0">You haven't got any published posts</div>
-      <div v-else>
+      <h2 class="mb-2 text-2xl font-bold">Unpublished posts</h2>
+      <div v-if="unpublishedPosts.length === 0">You haven't got any unpublished posts</div>
+      <div class="mb-6 flex flex-col gap-4" v-else>
         <div v-for="post in unpublishedPosts" :key="post._id">
-          <h3>{{ post.title }}</h3>
-          <button @click="() => publishPost(post._id)">Publish</button>
-          <RouterLink :to="`/edit/${post._id}`">Edit</RouterLink>
-          <button @click="() => deletePost(post._id)">Delete</button>
+          <h3 class="font-bold">{{ post.title }}</h3>
+          <p class="italic">
+            {{ DateTime.fromISO(post.createdAt).toLocaleString(DateTime.DATE_FULL) }}
+          </p>
+          <p v-if="post.description">{{ post.description }}</p>
+          <div class="mt-2 flex items-center gap-4">
+            <button
+              class="rounded-md border border-sky-900 px-2 py-1 hover:shadow-md"
+              @click="() => publishPost(post._id)"
+            >
+              Publish
+            </button>
+            <RouterLink
+              class="rounded-md border border-emerald-700 px-2 py-1 text-emerald-700 hover:shadow-md"
+              :to="`/edit/${post._id}`"
+              >Edit</RouterLink
+            >
+            <button
+              class="rounded-md border border-rose-900 px-2 py-1 text-rose-900 hover:shadow-md"
+              @click="() => deletePost(post._id)"
+            >
+              Delete
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { ErrorMessage, Field, useForm } from 'vee-validate'
 import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { signInFormSchema } from '../schemas/signInFormSchema'
+import PasswordInput from '@/components/PasswordInput.vue'
 
 const router = useRouter()
 
@@ -49,31 +50,64 @@ const isSignInViaEmail = ref(false)
 </script>
 
 <template>
-  <div v-if="formError">
+  <div
+    class="mb-4 w-fit rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
+    v-if="formError"
+  >
+    <h2 class="font-bold">Your data has followind errors:</h2>
     <h3>{{ formError }}</h3>
   </div>
-  <h1>Sign in</h1>
-  <form action="" :validation-schema="validationSchema" @submit.prevent="onSubmit">
+  <form
+    class="mb-4 flex flex-col gap-4"
+    action=""
+    :validation-schema="validationSchema"
+    @submit.prevent="onSubmit"
+  >
     <div>
-      <template v-if="isSignInViaEmail">
+      <div class="flex flex-col gap-2" v-if="isSignInViaEmail">
         <label for="email">Email</label>
-        <Field type="email" name="email" id="email" />
-        <ErrorMessage name="email" />
-      </template>
-      <template v-else>
+        <Field class="self-start rounded-md" type="email" name="email" id="email" />
+        <ErrorMessage
+          class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
+          name="email"
+        />
+      </div>
+      <div class="flex flex-col gap-2" v-else>
         <label for="username">Username</label>
-        <Field type="text" name="username" id="username" />
-        <ErrorMessage name="username" />
-      </template>
+        <Field class="self-start rounded-md" type="text" name="username" id="username" />
+        <ErrorMessage
+          class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
+          name="username"
+        />
+      </div>
     </div>
-    <div>
+    <div class="flex flex-col gap-2">
       <label for="password">Password</label>
-      <Field type="password" name="password" id="password" />
-      <ErrorMessage name="password" />
+      <PasswordInput class="self-start" name="password" />
+      <ErrorMessage
+        class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
+        name="password"
+      />
     </div>
-    <button>Sign in</button>
+    <button class="self-start rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md">
+      Sign in
+    </button>
   </form>
-  <button v-if="isSignInViaEmail" @click="isSignInViaEmail = false">Or sign in via username</button>
-  <button v-else @click="isSignInViaEmail = true">Or sign in via email</button>
-  <h2>Haven't got an account? <RouterLink to="/sign-up">Sign up</RouterLink></h2>
+  <button
+    class="rounded-md border border-sky-900 px-2 py-1 hover:shadow-md"
+    v-if="isSignInViaEmail"
+    @click="isSignInViaEmail = false"
+  >
+    Or sign in via username
+  </button>
+  <button
+    class="rounded-md border border-sky-900 px-2 py-1 hover:shadow-md"
+    v-else
+    @click="isSignInViaEmail = true"
+  >
+    Or sign in via email
+  </button>
+  <h2 class="mt-4">
+    Haven't got an account? <RouterLink class="font-bold" to="/sign-up">Sign up</RouterLink>
+  </h2>
 </template>
