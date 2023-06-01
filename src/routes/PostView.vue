@@ -7,15 +7,13 @@ import { DateTime } from 'luxon'
 
 const { postId } = useRoute().params
 
-const queryFn = () =>
-  blogApi.get(`/posts/${postId}`).json((data) => {
-    const parsedData = PostResponseSchema.parse(data)
-    return parsedData.post
-  })
-
 const { data: post, status } = useQuery({
   queryKey: ['posts', postId],
-  queryFn
+  queryFn: () =>
+    blogApi.get(`/posts/${postId}`).json((data) => {
+      const parsedData = PostResponseSchema.parse(data)
+      return parsedData.data.post
+    })
 })
 </script>
 

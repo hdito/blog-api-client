@@ -17,7 +17,7 @@ const { data: post, status } = useQuery({
       .get()
       .json((data) => {
         const parsedData = PostResponseSchema.parse(data)
-        return parsedData.post
+        return parsedData.data.post
       }),
   queryKey: ['posts', postId]
 })

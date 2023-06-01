@@ -4,18 +4,22 @@ import { blogApi } from '@/utils/blogApi'
 import { useQuery } from '@tanstack/vue-query'
 import { DateTime } from 'luxon'
 
-const queryFn = () =>
-  blogApi.get('/posts').json((data) => {
-    const parsedData = PostsResponseSchema.parse(data)
-    return parsedData.posts
-  })
-
-const { data, status } = useQuery({ queryKey: ['posts'], queryFn })
+const { data, status } = useQuery({
+  queryKey: ['posts'],
+  queryFn: () =>
+    blogApi.get('/posts').json((data) => {
+      const parsedData = PostsResponseSchema.parse(data)
+      return parsedData.data.posts
+    })
+})
 </script>
 
 <template>
   <div v-if="status === 'loading'">Loading...</div>
-  <div class="w-fit border border-rose-800 bg-rose-300/50 px-4 py-2" v-else-if="status === 'error'">
+  <div
+    class="w-fit rounded-md border border-rose-800 bg-rose-300/50 px-4 py-2 text-rose-800"
+    v-else-if="status === 'error'"
+  >
     Error has occured on loading posts. Try again later.
   </div>
   <div v-else class="flex flex-col gap-4">

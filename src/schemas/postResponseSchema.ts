@@ -1,8 +1,11 @@
-import { PostSchema } from '@/types/post'
+import { PostSchema } from '@/schemas/postSchema'
+import { successResponseWrapper } from './successResponseWrapper'
 import { z } from 'zod'
 
-export const PostResponseSchema = z.object({
-  post: PostSchema
-})
+export const PostResponseSchema = successResponseWrapper(
+  z.object({
+    post: PostSchema
+  })
+)
 
 export type PostResponse = z.infer<typeof PostResponseSchema>

@@ -1,7 +1,7 @@
 import decode from 'jwt-decode'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { UserDataSchema, type UserData } from './types/token'
+import { UserDataSchema, type UserData } from '@/schemas/userDataSchema'
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<UserData | null>(null)
@@ -32,19 +32,18 @@ export const useUserStore = defineStore('user', () => {
     userToken.value = null
   }
 
-  async function setUser(token: string, successCallback: () => void, errorCallback: () => void) {
+  async function setUser(token: string) {
     try {
       const decodedToken = decode(token)
       const parsedToken = UserDataSchema.parse(decodedToken)
       user.value = parsedToken
       userToken.value = token
       localStorage.setItem('token', token)
-      successCallback()
     } catch (error) {
       user.value = null
       userToken.value = null
       localStorage.removeItem('token')
-      errorCallback()
+      throw new Error('Invalid token')
     }
   }
 

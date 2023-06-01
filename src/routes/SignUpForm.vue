@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import PasswordInput from '@/components/PasswordInput.vue'
+import { badRequestResponseSchema } from '@/schemas/badRequestResponseSchema'
 import { signUpFormSchema } from '@/schemas/signUpFormSchema'
 import { blogApi } from '@/utils/blogApi'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -12,30 +13,25 @@ const validationSchema = toTypedSchema(signUpFormSchema)
 const { handleSubmit } = useForm({ validationSchema })
 
 const onSubmit = handleSubmit((values) => {
+  formErrors.value = null
+  formStatus.value = null
   blogApi
     .url('/sign-up')
     .post(values)
     .badRequest((error) => {
-      console.dir(error)
-      formErrors.value = null
-      ;(error.json as { error: { path: string; msg: string }[] }).error.forEach((error) => {
-        if (formErrors.value === null) {
-          formErrors.value = [error.msg]
-          return
-        }
-        formErrors.value.push(error.msg)
-        formStatus.value = 'error'
-      })
+      const badRequest = badRequestResponseSchema.parse(error.json)
+      formErrors.value = badRequest.data.map((error) => error.message)
+      formStatus.value = 'error'
     })
     .res(() => (formStatus.value = 'success'))
     .catch(() => {
       formStatus.value = 'error'
-      if (formErrors.value !== null) formErrors.value = null
+      formErrors.value = 'Unknown error has occured on singing up. Try again later'
     })
 })
 
 const formStatus = ref<'success' | 'error' | null>(null)
-const formErrors = ref<string[] | null>(null)
+const formErrors = ref<string[] | string | null>(null)
 </script>
 
 <template>
@@ -49,11 +45,13 @@ const formErrors = ref<string[] | null>(null)
     class="mb-4 w-fit rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
     v-else-if="formStatus === 'error'"
   >
-    <h3 class="font-bold">Errors on signing up</h3>
-    <ul class="list-inside list-disc" v-if="formErrors">
-      <li v-for="error in formErrors" :key="error">{{ error }}</li>
-    </ul>
-    <p v-else>Unknown error has occured. Try again later</p>
+    <h3 class="font-bold" v-if="typeof formErrors === 'string'">{{ formErrors }}</h3>
+    <template v-else>
+      <h3 class="font-bold">Errors on signing up</h3>
+      <ul class="list-inside list-disc">
+        <li v-for="error in formErrors" :key="error">{{ error }}</li>
+      </ul>
+    </template>
   </div>
   <form class="mb-4 flex flex-col gap-4" action="" @submit.prevent="onSubmit">
     <div class="flex flex-col gap-2">
@@ -66,7 +64,7 @@ const formErrors = ref<string[] | null>(null)
     </div>
     <div class="flex flex-col gap-2">
       <label for="email">Email</label>
-      <Field class="self-start rounded-md" type="text" name="email" id="email" />
+      <Field class="self-start rounded-md" type="email" name="email" id="email" />
       <ErrorMessage
         class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
         name="email"

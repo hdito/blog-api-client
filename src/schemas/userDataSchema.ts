@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 export const UserDataSchema = z.object({
   id: z.string(),
+  username: z.string(),
   role: z.union([z.literal('user'), z.literal('author'), z.literal('admin')])
 })
 

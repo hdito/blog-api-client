@@ -7,44 +7,37 @@ import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { signInFormSchema } from '../schemas/signInFormSchema'
 import PasswordInput from '@/components/PasswordInput.vue'
+import { badRequestResponseSchema } from '@/schemas/badRequestResponseSchema'
+import { signInResponseSchema } from '@/schemas/signInResponseSchema'
 
 const router = useRouter()
-
 const { setUser } = useUserStore()
 
 const validationSchema = toTypedSchema(signInFormSchema)
-
 const { handleSubmit } = useForm({ validationSchema })
-
 const onSubmit = handleSubmit((values) => {
+  formErrors.value = null
   blogApi
     .url('/sign-in')
     .post(values)
     .badRequest((error) => {
-      if (typeof error.json.error === 'string') {
-        formError.value = error.json.error
-      } else formError.value = 'Unknwon error has occured. Try again later'
+      const badRequest = badRequestResponseSchema.parse(error.json)
+      formErrors.value = badRequest.data.map((error) => error.message)
     })
     .json((response) => {
-      if (typeof response.token === 'string') {
-        setUser(
-          response.token,
-          () => {
-            formError.value = null
-            router.push('/')
-          },
-          () => {
-            formError.value = 'Unknwon error has occured. Try again later'
-          }
-        )
+      const token = signInResponseSchema.parse(response).data.token
+      try {
+        setUser(token)
+        router.push('/')
+      } catch {
+        formErrors.value = 'Unknown error has occured. Try again later'
       }
     })
     .catch(() => {
-      formError.value = 'Unknwon error has occured. Try again later'
+      formErrors.value = 'Unknown error has occured. Try again later'
     })
 })
-
-const formError = ref<string | null>(null)
+const formErrors = ref<string[] | string | null>(null)
 
 const isSignInViaEmail = ref(false)
 </script>
@@ -52,10 +45,17 @@ const isSignInViaEmail = ref(false)
 <template>
   <div
     class="mb-4 w-fit rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-    v-if="formError"
+    v-if="formErrors"
   >
-    <h2 class="font-bold">Your data has followind errors:</h2>
-    <h3>{{ formError }}</h3>
+    <h2 class="font-bold" v-if="typeof formErrors === 'string'">{{ formErrors }}</h2>
+    <template v-else>
+      <h2 class="font-bold">Your data has followind errors:</h2>
+      <ul class="list-inside list-disc">
+        <li v-for="error in formErrors" :key="error">
+          {{ error }}
+        </li>
+      </ul>
+    </template>
   </div>
   <form
     class="mb-4 flex flex-col gap-4"

@@ -1,69 +1,13 @@
 <script setup lang="ts">
-import { PostsResponseSchema } from '@/schemas/postsResponseSchema'
-import { useUserStore } from '@/userStore'
-import { blogApi } from '@/utils/blogApi'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { computed } from 'vue'
-import { RouterLink } from 'vue-router'
+import { useDeletePost } from '@/composables/useDeletePost'
+import { useMyPosts } from '@/composables/useMyPosts'
+import { usePublishPost } from '@/composables/usePublishPost'
 import { DateTime } from 'luxon'
+import { RouterLink } from 'vue-router'
 
-const userStore = useUserStore()
-
-const queryClient = useQueryClient()
-
-const { mutate: mutateIsPublished } = useMutation({
-  mutationFn: ({ postId, value }: { postId: string; value: boolean }) =>
-    blogApi
-      .url(`/posts/${postId}`)
-      .auth(`Bearer ${userStore.userToken}`)
-      .put({
-        isPublished: value
-      })
-      .json((data) => console.log(data)),
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['my-posts'] })
-    queryClient.invalidateQueries({ queryKey: ['posts'] })
-  }
-})
-function publishPost(postId: string) {
-  mutateIsPublished({ postId, value: true })
-}
-function unpublishPost(postId: string) {
-  mutateIsPublished({ postId, value: false })
-}
-
-const { mutate: deletePost } = useMutation({
-  mutationFn: (postId: string) =>
-    blogApi
-      .auth(`Bearer ${userStore.userToken}`)
-      .url(`/posts/${postId}`)
-      .delete()
-      .res((data) => console.log(data)),
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['my-posts'] })
-    queryClient.invalidateQueries({ queryKey: ['posts'] })
-  }
-})
-
-const { data: posts, status } = useQuery({
-  queryKey: ['my-posts'],
-  queryFn: () =>
-    blogApi
-      .auth(`Bearer ${userStore.userToken}`)
-      .get('/posts?type=own')
-      .json((data) => {
-        const parsedData = PostsResponseSchema.parse(data)
-        return parsedData.posts
-      })
-})
-const unpublishedPosts = computed(() => {
-  if (!posts.value) return []
-  return posts.value.filter((post) => !post.isPublished)
-})
-const publishedPosts = computed(() => {
-  if (!posts.value) return []
-  return posts.value.filter((post) => post.isPublished)
-})
+const { publishedPosts, unpublishedPosts, status } = useMyPosts()
+const { publishPost, unpublishPost } = usePublishPost()
+const { deletePost } = useDeletePost()
 </script>
 
 <template>

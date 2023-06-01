@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { EditorPostSchema } from '@/schemas/editorPostSchema'
 import { PostPostResponseSchema } from '@/schemas/postPostResponseSchema'
-import type { Post } from '@/types/post'
+import type { Post } from '@/schemas/postSchema'
 import { useUserStore } from '@/userStore'
 import { blogApi } from '@/utils/blogApi'
+import { queryPostsKey } from '@/utils/queryPostsKeys'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { toTypedSchema } from '@vee-validate/zod'
 import { ErrorMessage, Field, useForm } from 'vee-validate'
@@ -32,10 +33,16 @@ const { mutate: postPost, error: postError } = useMutation({
       .url('/posts')
       .post({ ...values, author: userStore.user!.id })
       .json((data) => {
-        postId.value = PostPostResponseSchema.parse(data).post._id
+        const post = PostPostResponseSchema.parse(data).data.post
+        postId.value = post._id
+        return { postId: postId.value, post }
       }),
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['posts', postId.value] })
+  onSuccess: ({ postId, post }) => {
+    queryClient.setQueryData(queryPostsKey.post(postId), { ...post })
+    queryClient.setQueryData(queryPostsKey.my, (prev) => {
+      if (!prev) return
+      return [post, ...(prev as Post[])]
+    })
   }
 })
 
@@ -45,9 +52,20 @@ const { mutate: updatePost, error: updateError } = useMutation({
       .auth(`Bearer ${userStore.userToken}`)
       .url(`/posts/${postId.value}`)
       .put({ ...values })
-      .json(),
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['posts', postId.value] })
+      .json(() => ({ postId: postId.value!, values })),
+  onSuccess: ({ postId, values }) => {
+    queryClient.setQueryData(queryPostsKey.post(postId), (prev) => {
+      if (!prev) return
+      return { ...(prev as Post), ...values }
+    })
+    queryClient.setQueryData(queryPostsKey.my, (prev) => {
+      if (!prev) return
+      return (prev as Post[]).map((post) => (post._id === postId ? { ...post, ...values } : post))
+    })
+    queryClient.setQueryData(queryPostsKey.all, (prev) => {
+      if (!prev) return
+      return (prev as Post[]).map((post) => (post._id === postId ? { ...post, ...values } : post))
+    })
   }
 })
 
@@ -68,7 +86,7 @@ const postId = ref<string | null>(props.post?._id ? props.post._id : null)
     class="mb-4 w-fit rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
     v-if="postError || updateError"
   >
-    Error occured on save. Try again later
+    Error has occured on save. Try again later
   </div>
   <form class="flex flex-1 flex-col gap-4" action="" @submit.prevent="onSubmit">
     <div class="flex flex-col gap-2">
