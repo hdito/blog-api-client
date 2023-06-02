@@ -1,8 +1,10 @@
-import { PostsResponseSchema } from '@/schemas/postsResponseSchema'
+import { PostSchema } from '@/schemas/postSchema'
 import { useUserStore } from '@/userStore'
 import { blogApi } from '@/utils/blogApi'
 import { useQuery } from '@tanstack/vue-query'
 import { computed } from 'vue'
+import { z } from 'zod'
+import { successResponseWrapper } from '../schemas/successResponseWrapper'
 
 export const useMyPosts = () => {
   const userStore = useUserStore()
@@ -14,7 +16,9 @@ export const useMyPosts = () => {
         .auth(`Bearer ${userStore.userToken}`)
         .get('/posts?type=own')
         .json((data) => {
-          const parsedData = PostsResponseSchema.parse(data)
+          const parsedData = successResponseWrapper(z.object({ posts: z.array(PostSchema) })).parse(
+            data
+          )
           return parsedData.data.posts
         })
   })

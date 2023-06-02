@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import { PostsResponseSchema } from '@/schemas/postsResponseSchema'
+import ErrorWrapper from '@/components/ErrorWrapper.vue'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
+import { PostWithAuthorSchema } from '@/schemas/postWithAuthorSchema'
+import { successResponseWrapper } from '@/schemas/successResponseWrapper'
 import { blogApi } from '@/utils/blogApi'
 import { useQuery } from '@tanstack/vue-query'
 import { DateTime } from 'luxon'
-import ErrorWrapper from '@/components/ErrorWrapper.vue'
-import LoadingSpinner from '@/components/LoadingSpinner.vue'
+import { z } from 'zod'
 
 const { data, status } = useQuery({
   queryKey: ['posts'],
   queryFn: () =>
-    blogApi.get('/posts').json((data) => {
-      const parsedData = PostsResponseSchema.parse(data)
+    blogApi.get('/posts?populate=author').json((data) => {
+      const parsedData = successResponseWrapper(
+        z.object({ posts: z.array(PostWithAuthorSchema) })
+      ).parse(data)
       return parsedData.data.posts
     })
 })

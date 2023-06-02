@@ -7,6 +7,9 @@ import { DateTime } from 'luxon'
 import ErrorWrapper from '@/components/ErrorWrapper.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import { useUserStore } from '@/userStore'
+import { successResponseWrapper } from '@/schemas/successResponseWrapper'
+import { z } from 'zod'
+import { PostSchema } from '@/schemas/postSchema'
 
 const userStore = useUserStore()
 
@@ -21,7 +24,7 @@ const { data: post, status } = useQuery({
         .auth(`Bearer ${userStore.userToken}`)
         .get(`/posts/${postId}?type=preview`)
         .json((data) => {
-          const parsedData = PostResponseSchema.parse(data)
+          const parsedData = successResponseWrapper(z.object({ post: PostSchema })).parse(data)
           return parsedData.data.post
         })
     }
