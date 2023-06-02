@@ -15,7 +15,7 @@ const { data: post, status } = useQuery({
   queryFn: () =>
     blogApi
       .auth(`Bearer ${userStore.userToken}`)
-      .url(`/posts/${postId}`)
+      .url(`/posts/${postId}?type=preview`)
       .get()
       .json((data) => {
         const parsedData = PostResponseSchema.parse(data)

@@ -29,7 +29,9 @@ const { deletePost } = useDeletePost()
       <div v-if="publishedPosts.length === 0">You haven't got any published posts</div>
       <div class="mb-6 flex flex-col gap-4" v-else>
         <div v-for="post in publishedPosts" :key="post._id">
-          <h3 class="font-bold">{{ post.title }}</h3>
+          <RouterLink :to="`/posts/${post._id}`">
+            <h3 class="font-bold">{{ post.title }}</h3>
+          </RouterLink>
           <p class="italic">
             {{ DateTime.fromISO(post.createdAt).toLocaleString(DateTime.DATE_FULL) }}
           </p>
@@ -61,7 +63,9 @@ const { deletePost } = useDeletePost()
       <div v-if="unpublishedPosts.length === 0">You haven't got any unpublished posts</div>
       <div class="mb-6 flex flex-col gap-4" v-else>
         <div v-for="post in unpublishedPosts" :key="post._id">
-          <h3 class="font-bold">{{ post.title }}</h3>
+          <RouterLink :to="`/posts/${post._id}?type=preview`">
+            <h3 class="font-bold">{{ post.title }}</h3>
+          </RouterLink>
           <p class="italic">
             {{ DateTime.fromISO(post.createdAt).toLocaleString(DateTime.DATE_FULL) }}
           </p>

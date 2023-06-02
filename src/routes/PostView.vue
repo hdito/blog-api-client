@@ -6,16 +6,30 @@ import { useRoute } from 'vue-router'
 import { DateTime } from 'luxon'
 import ErrorWrapper from '@/components/ErrorWrapper.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
+import { useUserStore } from '@/userStore'
 
-const { postId } = useRoute().params
+const userStore = useUserStore()
 
+const route = useRoute()
+const { postId } = route.params
+const { type } = route.query
 const { data: post, status } = useQuery({
   queryKey: ['posts', postId],
-  queryFn: () =>
-    blogApi.get(`/posts/${postId}`).json((data) => {
+  queryFn: () => {
+    if (type === 'preview') {
+      return blogApi
+        .auth(`Bearer ${userStore.userToken}`)
+        .get(`/posts/${postId}?type=preview`)
+        .json((data) => {
+          const parsedData = PostResponseSchema.parse(data)
+          return parsedData.data.post
+        })
+    }
+    return blogApi.get(`/posts/${postId}`).json((data) => {
       const parsedData = PostResponseSchema.parse(data)
       return parsedData.data.post
     })
+  }
 })
 </script>
 
