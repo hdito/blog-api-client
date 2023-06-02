@@ -26,9 +26,12 @@ const { data, status } = useQuery({
       <a :href="`/posts/${post._id}`">
         <h2 class="text-xl font-bold">{{ post.title }}</h2>
       </a>
-      <p class="italic">
+      <span>
+        By <span class="font-bold">{{ post.author!.username }}</span> •
+      </span>
+      <span class="italic">
         {{ DateTime.fromISO(post.createdAt).toLocaleString(DateTime.DATE_FULL) }}
-      </p>
+      </span>
       <p v-if="post.description">{{ post.description }}</p>
     </div>
   </div>

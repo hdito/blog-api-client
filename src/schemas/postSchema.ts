@@ -6,7 +6,8 @@ export const PostSchema = z.object({
   content: z.string().optional(),
   createdAt: z.string(),
   _id: z.string(),
-  isPublished: z.boolean()
+  isPublished: z.boolean(),
+  author: z.object({ username: z.string(), _id: z.string() })
 })
 
 export type Post = z.infer<typeof PostSchema>
