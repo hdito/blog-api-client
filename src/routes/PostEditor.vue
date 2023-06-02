@@ -46,6 +46,9 @@ const { mutate: postPost, error: postError } = useMutation({
       if (!prev) return
       return [post, ...(prev as Post[])]
     })
+  },
+  onSettled: () => {
+    isSaving.value = false
   }
 })
 
@@ -78,7 +81,6 @@ const { mutate: updatePost, error: updateError } = useMutation({
 
 const onSubmit = handleSubmit((values) => {
   isSaving.value = true
-  console.log({ values })
   if (postId.value === null) {
     postPost(values)
     return
@@ -105,7 +107,7 @@ const isSaving = ref(false)
     <CustomFormField input-type="textarea" label="Content" name="content" :allow-growth="true" />
     <div class="flex items-center gap-4">
       <button
-        class="flex h-8 w-16 max-w-fit items-center justify-center rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md"
+        class="flex h-8 w-16 items-center justify-center rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md"
       >
         <LoadingSpinner v-if="isSaving" />
         <span v-else>Save</span>
