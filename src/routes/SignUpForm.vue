@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CustomFormField from '@/components/CustomFormField.vue'
 import ErrorWrapper from '@/components/ErrorWrapper.vue'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import { badRequestResponseSchema } from '@/schemas/badRequestResponseSchema'
 import { signUpFormSchema } from '@/schemas/signUpFormSchema'
 import { blogApi } from '@/utils/blogApi'
@@ -16,6 +17,8 @@ const { handleSubmit } = useForm({ validationSchema })
 const onSubmit = handleSubmit((values) => {
   formErrors.value = null
   formStatus.value = null
+  isSigningUp.value = true
+
   blogApi
     .url('/sign-up')
     .post(values)
@@ -29,10 +32,14 @@ const onSubmit = handleSubmit((values) => {
       formStatus.value = 'error'
       formErrors.value = 'Unknown error has occured on singing up. Try again later'
     })
+    .finally(() => {
+      isSigningUp.value = false
+    })
 })
 
 const formStatus = ref<'success' | 'error' | null>(null)
 const formErrors = ref<string[] | string | null>(null)
+const isSigningUp = ref(false)
 </script>
 
 <template>
@@ -56,9 +63,14 @@ const formErrors = ref<string[] | string | null>(null)
     <CustomFormField input-type="email" name="email" label="Email" />
     <CustomFormField input-type="password" name="password" label="Password" />
     <CustomFormField input-type="password" name="password2" label="Repeat password" />
-    <button class="self-start rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md">
-      Sign up
-    </button>
+    <div class="flex items-center gap-4">
+      <button
+        class="flex h-8 w-24 items-center justify-center self-start rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md"
+      >
+        <LoadingSpinner v-if="isSigningUp" />
+        <span v-else>Sign up</span>
+      </button>
+    </div>
   </form>
   <h2>Already got an account? <RouterLink class="font-bold" to="/sign-in">Sign in</RouterLink></h2>
 </template>

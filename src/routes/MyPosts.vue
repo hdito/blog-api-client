@@ -5,6 +5,7 @@ import { usePublishPost } from '@/composables/usePublishPost'
 import { DateTime } from 'luxon'
 import { RouterLink } from 'vue-router'
 import ErrorWrapper from '@/components/ErrorWrapper.vue'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
 
 const { publishedPosts, unpublishedPosts, status } = useMyPosts()
 const { publishPost, unpublishPost } = usePublishPost()
@@ -18,7 +19,7 @@ const { deletePost } = useDeletePost()
   >
     Create new post
   </RouterLink>
-  <div v-if="status === 'loading'">Loading...</div>
+  <LoadingSpinner v-if="status === 'loading'" class="m-auto text-2xl" />
   <ErrorWrapper v-else-if="status === 'error'">
     Error has occured on loading posts. Try again later.
   </ErrorWrapper>

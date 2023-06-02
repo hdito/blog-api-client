@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/vue-query'
 import { useRoute } from 'vue-router'
 import PostEditor from './PostEditor.vue'
 import ErrorWrapper from '@/components/ErrorWrapper.vue'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
 
 const { postId } = useRoute().params
 const userStore = useUserStore()
@@ -25,7 +26,7 @@ const { data: post, status } = useQuery({
 </script>
 
 <template>
-  <div v-if="status === 'loading'">Loading...</div>
+  <LoadingSpinner v-if="status === 'loading'" class="m-auto text-2xl" />
   <ErrorWrapper v-else-if="status === 'error'">
     Unknown error has occured on loading post
   </ErrorWrapper>

@@ -1,8 +1,7 @@
-import type { Post } from '@/schemas/postSchema'
 import { useUserStore } from '@/userStore'
 import { blogApi } from '@/utils/blogApi'
 import { queryPostsKey } from '@/utils/queryPostsKeys'
-import { useQueryClient, useMutation } from '@tanstack/vue-query'
+import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
 export const usePublishPost = () => {
   const userStore = useUserStore()
@@ -17,30 +16,9 @@ export const usePublishPost = () => {
           isPublished: value
         })
         .json(() => ({ postId, isPublished: value })),
-    onSuccess: ({ postId, isPublished }) => {
-      if (isPublished) {
-        queryClient.invalidateQueries({ queryKey: queryPostsKey.all })
-        return
-      }
-
-      queryClient.setQueryData(queryPostsKey.all, (prev) => {
-        if (!prev) return
-        return (prev as Post[]).filter((post) => post._id !== postId)
-      })
-
-      queryClient.setQueryData(queryPostsKey.my, (prev) => {
-        if (!prev) return
-        return (prev as Post[]).map((post) =>
-          post._id === postId ? { ...post, isPublished } : post
-        )
-      })
-      queryClient.setQueryData(queryPostsKey.post(postId), (prev) => {
-        if (!prev) return
-        return {
-          ...(prev as Post),
-          isPublished
-        }
-      })
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryPostsKey.all })
+      queryClient.invalidateQueries({ queryKey: queryPostsKey.my })
     }
   })
 

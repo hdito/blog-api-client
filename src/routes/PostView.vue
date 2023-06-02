@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/vue-query'
 import { useRoute } from 'vue-router'
 import { DateTime } from 'luxon'
 import ErrorWrapper from '@/components/ErrorWrapper.vue'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
 
 const { postId } = useRoute().params
 
@@ -19,7 +20,7 @@ const { data: post, status } = useQuery({
 </script>
 
 <template>
-  <div v-if="status === 'loading'">Loading...</div>
+  <LoadingSpinner v-if="status === 'loading'" class="m-auto text-2xl" />
   <ErrorWrapper v-else-if="status === 'error'">
     Error has occured on loading post. Try again later.
   </ErrorWrapper>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import CustomFormField from '@/components/CustomFormField.vue'
 import ErrorWrapper from '@/components/ErrorWrapper.vue'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import { EditorPostSchema } from '@/schemas/editorPostSchema'
 import { PostPostResponseSchema } from '@/schemas/postPostResponseSchema'
 import type { Post } from '@/schemas/postSchema'
@@ -55,6 +56,7 @@ const { mutate: updatePost, error: updateError } = useMutation({
       .url(`/posts/${postId.value}`)
       .put({ ...values })
       .json(() => ({ postId: postId.value!, values })),
+
   onSuccess: ({ postId, values }) => {
     queryClient.setQueryData(queryPostsKey.post(postId), (prev) => {
       if (!prev) return
@@ -68,10 +70,14 @@ const { mutate: updatePost, error: updateError } = useMutation({
       if (!prev) return
       return (prev as Post[]).map((post) => (post._id === postId ? { ...post, ...values } : post))
     })
+  },
+  onSettled: () => {
+    isSaving.value = false
   }
 })
 
 const onSubmit = handleSubmit((values) => {
+  isSaving.value = true
   console.log({ values })
   if (postId.value === null) {
     postPost(values)
@@ -81,6 +87,7 @@ const onSubmit = handleSubmit((values) => {
 })
 
 const postId = ref<string | null>(props.post?._id ? props.post._id : null)
+const isSaving = ref(false)
 </script>
 
 <template>
@@ -97,8 +104,11 @@ const postId = ref<string | null>(props.post?._id ? props.post._id : null)
     />
     <CustomFormField input-type="textarea" label="Content" name="content" :allow-growth="true" />
     <div class="flex items-center gap-4">
-      <button class="block max-w-fit rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md">
-        Save
+      <button
+        class="flex h-8 w-16 max-w-fit items-center justify-center rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md"
+      >
+        <LoadingSpinner v-if="isSaving" />
+        <span v-else>Save</span>
       </button>
       <RouterLink class="rounded-md border border-sky-900 px-2 py-1 hover:shadow-md" to="/my-posts"
         >Cancel</RouterLink

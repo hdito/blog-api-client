@@ -10,6 +10,7 @@ import { useForm } from 'vee-validate'
 import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { signInFormSchema } from '../schemas/signInFormSchema'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
 
 const router = useRouter()
 const { setUser } = useUserStore()
@@ -18,6 +19,7 @@ const validationSchema = toTypedSchema(signInFormSchema)
 const { handleSubmit } = useForm({ validationSchema })
 const onSubmit = handleSubmit((values) => {
   formErrors.value = null
+  isSigningIn.value = true
   blogApi
     .url('/sign-in')
     .post(values)
@@ -37,10 +39,14 @@ const onSubmit = handleSubmit((values) => {
     .catch(() => {
       formErrors.value = 'Unknown error has occured. Try again later'
     })
+    .finally(() => {
+      isSigningIn.value = false
+    })
 })
 const formErrors = ref<string[] | string | null>(null)
 
 const isSignInViaEmail = ref(false)
+const isSigningIn = ref(false)
 </script>
 
 <template>
@@ -64,8 +70,11 @@ const isSignInViaEmail = ref(false)
     <CustomFormField input-type="email" label="Email" name="email" v-if="isSignInViaEmail" />
     <CustomFormField input-type="text" label="Username" name="username" v-else />
     <CustomFormField input-type="password" label="Password" name="password" />
-    <button class="self-start rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md">
-      Sign in
+    <button
+      class="flex h-8 w-24 items-center justify-center self-start rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md"
+    >
+      <LoadingSpinner v-if="isSigningIn" />
+      <span v-else>Sign in</span>
     </button>
   </form>
   <button
