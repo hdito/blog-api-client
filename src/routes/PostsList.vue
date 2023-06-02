@@ -3,6 +3,7 @@ import { PostsResponseSchema } from '@/schemas/postsResponseSchema'
 import { blogApi } from '@/utils/blogApi'
 import { useQuery } from '@tanstack/vue-query'
 import { DateTime } from 'luxon'
+import ErrorWrapper from '@/components/ErrorWrapper.vue'
 
 const { data, status } = useQuery({
   queryKey: ['posts'],
@@ -16,12 +17,9 @@ const { data, status } = useQuery({
 
 <template>
   <div v-if="status === 'loading'">Loading...</div>
-  <div
-    class="w-fit rounded-md border border-rose-800 bg-rose-300/50 px-4 py-2 text-rose-800"
-    v-else-if="status === 'error'"
-  >
+  <ErrorWrapper v-else-if="status === 'error'">
     Error has occured on loading posts. Try again later.
-  </div>
+  </ErrorWrapper>
   <div v-else class="flex flex-col gap-4">
     <div class="" v-for="post in data" :key="post._id">
       <a :href="`/posts/${post._id}`">

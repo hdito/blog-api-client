@@ -1,14 +1,15 @@
 <script setup lang="ts">
+import CustomFormField from '@/components/CustomFormField.vue'
+import ErrorWrapper from '@/components/ErrorWrapper.vue'
+import { badRequestResponseSchema } from '@/schemas/badRequestResponseSchema'
+import { signInResponseSchema } from '@/schemas/signInResponseSchema'
 import { useUserStore } from '@/userStore'
 import { blogApi } from '@/utils/blogApi'
 import { toTypedSchema } from '@vee-validate/zod'
-import { ErrorMessage, Field, useForm } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { signInFormSchema } from '../schemas/signInFormSchema'
-import PasswordInput from '@/components/PasswordInput.vue'
-import { badRequestResponseSchema } from '@/schemas/badRequestResponseSchema'
-import { signInResponseSchema } from '@/schemas/signInResponseSchema'
 
 const router = useRouter()
 const { setUser } = useUserStore()
@@ -43,10 +44,7 @@ const isSignInViaEmail = ref(false)
 </script>
 
 <template>
-  <div
-    class="mb-4 w-fit rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-    v-if="formErrors"
-  >
+  <ErrorWrapper class="mb-4" v-if="formErrors">
     <h2 class="font-bold" v-if="typeof formErrors === 'string'">{{ formErrors }}</h2>
     <template v-else>
       <h2 class="font-bold">Your data has followind errors:</h2>
@@ -56,39 +54,16 @@ const isSignInViaEmail = ref(false)
         </li>
       </ul>
     </template>
-  </div>
+  </ErrorWrapper>
   <form
     class="mb-4 flex flex-col gap-4"
     action=""
     :validation-schema="validationSchema"
     @submit.prevent="onSubmit"
   >
-    <div>
-      <div class="flex flex-col gap-2" v-if="isSignInViaEmail">
-        <label for="email">Email</label>
-        <Field class="self-start rounded-md" type="email" name="email" id="email" />
-        <ErrorMessage
-          class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-          name="email"
-        />
-      </div>
-      <div class="flex flex-col gap-2" v-else>
-        <label for="username">Username</label>
-        <Field class="self-start rounded-md" type="text" name="username" id="username" />
-        <ErrorMessage
-          class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-          name="username"
-        />
-      </div>
-    </div>
-    <div class="flex flex-col gap-2">
-      <label for="password">Password</label>
-      <PasswordInput class="self-start" name="password" />
-      <ErrorMessage
-        class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-        name="password"
-      />
-    </div>
+    <CustomFormField input-type="email" label="Email" name="email" v-if="isSignInViaEmail" />
+    <CustomFormField input-type="text" label="Username" name="username" v-else />
+    <CustomFormField input-type="password" label="Password" name="password" />
     <button class="self-start rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md">
       Sign in
     </button>

@@ -4,6 +4,7 @@ import { blogApi } from '@/utils/blogApi'
 import { useQuery } from '@tanstack/vue-query'
 import { useRoute } from 'vue-router'
 import { DateTime } from 'luxon'
+import ErrorWrapper from '@/components/ErrorWrapper.vue'
 
 const { postId } = useRoute().params
 
@@ -19,12 +20,9 @@ const { data: post, status } = useQuery({
 
 <template>
   <div v-if="status === 'loading'">Loading...</div>
-  <div
-    class="w-fit rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-    v-else-if="status === 'error'"
-  >
+  <ErrorWrapper v-else-if="status === 'error'">
     Error has occured on loading post. Try again later.
-  </div>
+  </ErrorWrapper>
   <div v-else>
     <h2 class="text-2xl font-bold">{{ post!.title }}</h2>
     <p class="mb-4 italic">

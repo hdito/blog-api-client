@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import CustomFormField from '@/components/CustomFormField.vue'
+import ErrorWrapper from '@/components/ErrorWrapper.vue'
 import { EditorPostSchema } from '@/schemas/editorPostSchema'
 import { PostPostResponseSchema } from '@/schemas/postPostResponseSchema'
 import type { Post } from '@/schemas/postSchema'
@@ -7,7 +9,7 @@ import { blogApi } from '@/utils/blogApi'
 import { queryPostsKey } from '@/utils/queryPostsKeys'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { toTypedSchema } from '@vee-validate/zod'
-import { ErrorMessage, Field, useForm } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import { ref } from 'vue'
 
 const props = defineProps<{ post?: Post }>()
@@ -82,47 +84,18 @@ const postId = ref<string | null>(props.post?._id ? props.post._id : null)
 </script>
 
 <template>
-  <div
-    class="mb-4 w-fit rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-    v-if="postError || updateError"
-  >
+  <ErrorWrapper class="mb-4" v-if="postError || updateError">
     Error has occured on save. Try again later
-  </div>
+  </ErrorWrapper>
   <form class="flex flex-1 flex-col gap-4" action="" @submit.prevent="onSubmit">
-    <div class="flex flex-col gap-2">
-      <label for="title">Title</label>
-      <Field class="rounded-md" type="text" id="title" name="title" />
-      <ErrorMessage
-        class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-        name="title"
-      />
-    </div>
-    <div class="flex flex-col gap-2">
-      <label for="description">Description</label>
-      <Field class="rounded-md" type="text" id="description" name="description" />
-      <ErrorMessage
-        class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-        name="description"
-      />
-    </div>
-    <div class="flex flex-1 flex-col gap-2">
-      <label for="content">Content</label>
-      <Field v-slot="{ value, handleChange, handleBlur }" name="content">
-        <textarea
-          class="resize-none rounded-md"
-          :value="value"
-          @input="handleChange"
-          @blur="handleBlur"
-          id="content"
-          cols="30"
-          rows="10"
-        />
-      </Field>
-      <ErrorMessage
-        class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-        name="content"
-      />
-    </div>
+    <CustomFormField input-type="text" label="Title" name="title" :allow-growth="true" />
+    <CustomFormField
+      input-type="text"
+      label="Description"
+      name="description"
+      :allow-growth="true"
+    />
+    <CustomFormField input-type="textarea" label="Content" name="content" :allow-growth="true" />
     <div class="flex items-center gap-4">
       <button class="block max-w-fit rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md">
         Save

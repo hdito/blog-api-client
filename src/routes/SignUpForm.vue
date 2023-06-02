@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import PasswordInput from '@/components/PasswordInput.vue'
+import CustomFormField from '@/components/CustomFormField.vue'
+import ErrorWrapper from '@/components/ErrorWrapper.vue'
 import { badRequestResponseSchema } from '@/schemas/badRequestResponseSchema'
 import { signUpFormSchema } from '@/schemas/signUpFormSchema'
 import { blogApi } from '@/utils/blogApi'
 import { toTypedSchema } from '@vee-validate/zod'
-import { ErrorMessage, Field, useForm } from 'vee-validate'
+import { useForm } from 'vee-validate'
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
 
@@ -41,10 +42,7 @@ const formErrors = ref<string[] | string | null>(null)
   >
     Signed up successfully! Now you can <a class="font-bold" href="/sign-in">sign in</a>
   </div>
-  <div
-    class="mb-4 w-fit rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-    v-else-if="formStatus === 'error'"
-  >
+  <ErrorWrapper class="mb-4" v-else-if="formStatus === 'error'">
     <h3 class="font-bold" v-if="typeof formErrors === 'string'">{{ formErrors }}</h3>
     <template v-else>
       <h3 class="font-bold">Errors on signing up</h3>
@@ -52,40 +50,12 @@ const formErrors = ref<string[] | string | null>(null)
         <li v-for="error in formErrors" :key="error">{{ error }}</li>
       </ul>
     </template>
-  </div>
+  </ErrorWrapper>
   <form class="mb-4 flex flex-col gap-4" action="" @submit.prevent="onSubmit">
-    <div class="flex flex-col gap-2">
-      <label for="username">Username</label>
-      <Field class="self-start rounded-md" type="text" name="username" id="username" />
-      <ErrorMessage
-        class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-        name="username"
-      />
-    </div>
-    <div class="flex flex-col gap-2">
-      <label for="email">Email</label>
-      <Field class="self-start rounded-md" type="email" name="email" id="email" />
-      <ErrorMessage
-        class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-        name="email"
-      />
-    </div>
-    <div class="flex flex-col gap-2">
-      <label for="password">Password</label>
-      <PasswordInput class="self-start" name="password" />
-      <ErrorMessage
-        class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-        name="password"
-      />
-    </div>
-    <div class="flex flex-col gap-2">
-      <label for="password2">Repeat password</label>
-      <PasswordInput class="self-start" name="password2" />
-      <ErrorMessage
-        class="self-start rounded-md border border-rose-900 bg-rose-300/50 px-3 py-2 text-rose-900"
-        name="password2"
-      />
-    </div>
+    <CustomFormField input-type="text" name="username" label="Username" />
+    <CustomFormField input-type="email" name="email" label="Email" />
+    <CustomFormField input-type="password" name="password" label="Password" />
+    <CustomFormField input-type="password" name="password2" label="Repeat password" />
     <button class="self-start rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md">
       Sign up
     </button>
