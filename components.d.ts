@@ -16,6 +16,7 @@ declare module '@vue/runtime-core' {
     LoadingSpinner: typeof import('./src/components/LoadingSpinner.vue')['default']
     MyPostCard: typeof import('./src/components/MyPostCard.vue')['default']
     PasswordInput: typeof import('./src/components/PasswordInput.vue')['default']
+    PostCard: typeof import('./src/components/PostCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

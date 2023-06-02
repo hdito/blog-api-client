@@ -5,7 +5,6 @@ import { PostWithAuthorSchema } from '@/schemas/postWithAuthorSchema'
 import { successResponseWrapper } from '@/schemas/successResponseWrapper'
 import { blogApi } from '@/utils/blogApi'
 import { useQuery } from '@tanstack/vue-query'
-import { DateTime } from 'luxon'
 import { z } from 'zod'
 
 const { data, status } = useQuery({
@@ -26,17 +25,6 @@ const { data, status } = useQuery({
     Error has occured on loading posts. Try again later.
   </ErrorWrapper>
   <div v-else class="flex flex-col gap-4">
-    <div class="" v-for="post in data" :key="post._id">
-      <a :href="`/posts/${post._id}`">
-        <h2 class="text-xl font-bold">{{ post.title }}</h2>
-      </a>
-      <span>
-        By <span class="font-bold">{{ post.author!.username }}</span> •
-      </span>
-      <span class="italic">
-        {{ DateTime.fromISO(post.createdAt).toLocaleString(DateTime.DATE_FULL) }}
-      </span>
-      <p v-if="post.description">{{ post.description }}</p>
-    </div>
+    <PostCard v-for="post in data" :key="post._id" :post="post" />
   </div>
 </template>
