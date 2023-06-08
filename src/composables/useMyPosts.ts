@@ -5,12 +5,13 @@ import { useQuery } from '@tanstack/vue-query'
 import { computed } from 'vue'
 import { z } from 'zod'
 import { successResponseWrapper } from '../schemas/successResponseWrapper'
+import { queryPostsKey } from '../utils/queryPostsKeys'
 
 export const useMyPosts = () => {
   const userStore = useUserStore()
 
   const { data: posts, status } = useQuery({
-    queryKey: ['my-posts'],
+    queryKey: queryPostsKey.my,
     queryFn: () =>
       blogApi
         .auth(`Bearer ${userStore.userToken}`)

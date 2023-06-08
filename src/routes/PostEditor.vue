@@ -29,7 +29,7 @@ const { handleSubmit } = useForm({
 const userStore = useUserStore()
 const queryClient = useQueryClient()
 
-const { mutate: postPost, error: postError } = useMutation({
+const { mutate: postPost, status: postStatus } = useMutation({
   mutationFn: (values: { title: string; description?: string; content?: string }) =>
     blogApi
       .auth(`Bearer ${userStore.userToken}`)
@@ -52,7 +52,7 @@ const { mutate: postPost, error: postError } = useMutation({
   }
 })
 
-const { mutate: updatePost, error: updateError } = useMutation({
+const { mutate: updatePost, status: updateStatus } = useMutation({
   mutationFn: (values: { title: string; description?: string; content?: string }) =>
     blogApi
       .auth(`Bearer ${userStore.userToken}`)
@@ -93,7 +93,7 @@ const isSaving = ref(false)
 </script>
 
 <template>
-  <ErrorWrapper class="mb-4" v-if="postError || updateError">
+  <ErrorWrapper class="mb-4" v-if="postStatus === 'error' || updateStatus === 'error'">
     Error has occured on save. Try again later
   </ErrorWrapper>
   <form class="flex flex-1 flex-col gap-4" action="" @submit.prevent="onSubmit">
@@ -109,7 +109,7 @@ const isSaving = ref(false)
       <button
         class="flex h-8 w-16 items-center justify-center rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md"
       >
-        <LoadingSpinner v-if="isSaving" />
+        <LoadingSpinner v-if="updateStatus === 'loading' || postStatus === 'loading'" />
         <span v-else>Save</span>
       </button>
       <RouterLink class="rounded-md border border-sky-900 px-2 py-1 hover:shadow-md" to="/my-posts"

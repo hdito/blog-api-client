@@ -7,6 +7,7 @@ import { useRoute } from 'vue-router'
 import PostEditor from './PostEditor.vue'
 import ErrorWrapper from '@/components/ErrorWrapper.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
+import { queryPostsKey } from '@/utils/queryPostsKeys'
 
 const { postId } = useRoute().params
 const userStore = useUserStore()
@@ -21,7 +22,7 @@ const { data: post, status } = useQuery({
         const parsedData = PostResponseSchema.parse(data)
         return parsedData.data.post
       }),
-  queryKey: ['posts', postId]
+  queryKey: queryPostsKey.post(postId as string)
 })
 </script>
 

@@ -4,11 +4,12 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import { PostWithAuthorSchema } from '@/schemas/postWithAuthorSchema'
 import { successResponseWrapper } from '@/schemas/successResponseWrapper'
 import { blogApi } from '@/utils/blogApi'
+import { queryPostsKey } from '@/utils/queryPostsKeys'
 import { useQuery } from '@tanstack/vue-query'
 import { z } from 'zod'
 
 const { data, status } = useQuery({
-  queryKey: ['posts'],
+  queryKey: queryPostsKey.all,
   queryFn: () =>
     blogApi.get('/posts?populate=author').json((data) => {
       const parsedData = successResponseWrapper(
