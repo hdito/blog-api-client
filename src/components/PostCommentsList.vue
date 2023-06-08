@@ -3,6 +3,7 @@ import { useComments } from '@/composables/useComments'
 import { useDeleteComment } from '@/composables/useDeleteComment'
 import { useUserStore } from '@/userStore'
 import { DateTime } from 'luxon'
+import IcRoundDeleteForever from '~icons/ic/round-delete-forever'
 
 const userStore = useUserStore()
 
@@ -18,7 +19,7 @@ const { comments, commentsStatus } = useComments()
   <div v-else class="flex flex-col gap-4">
     <div v-for="comment in comments" :key="comment._id" class="relative">
       <p class="font-bold">{{ comment.author.username }}</p>
-      <p class="text-sm">
+      <p class="text-sm italic">
         {{ DateTime.fromISO(comment.createdAt).toLocaleString(DateTime.DATE_FULL) }}
       </p>
       <p class="whitespace-pre-wrap">{{ comment.body }}</p>
@@ -29,7 +30,7 @@ const { comments, commentsStatus } = useComments()
         @click="() => deleteComment(comment._id)"
         title="Delete comment"
       >
-        <IcSharpDeleteForever />
+        <IcRoundDeleteForever />
       </button>
     </div>
   </div>

@@ -6,7 +6,7 @@ import { RouterView } from 'vue-router'
 <template>
   <div class="flex min-h-screen flex-col bg-amber-50 text-sky-900">
     <AppHeader />
-    <main class="m-auto min-w-[500px] max-w-prose flex-1 pb-4">
+    <main class="m-auto min-w-[500px] max-w-prose flex-1 pb-8">
       <RouterView />
     </main>
   </div>

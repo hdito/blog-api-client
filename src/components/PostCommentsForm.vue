@@ -37,28 +37,25 @@ const onSubmit = handleSubmit((values) => {
 </script>
 
 <template>
-  <div class="mb-4 flex flex-col gap-4">
-    <h3 class="text-2xl font-bold">Comments</h3>
-    <RouterLink
-      v-if="!userStore.user"
-      to="/sign-in"
-      class="self-start rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md"
-    >
-      Sign in to comment
-    </RouterLink>
-    <template v-else>
-      <ErrorWrapper v-if="postCommentStatus === 'error'">
-        <h4 class="font-bold">Unknown error has occured on posting comment</h4>
-      </ErrorWrapper>
-      <form action="" method="post" @submit="onSubmit">
-        <CustomFormField input-type="textarea" :rows="3" name="body" label="Your comment" />
-        <button
-          class="mt-2 flex h-8 w-28 items-center justify-center self-start rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md"
-        >
-          <LoadingSpinner v-if="postCommentStatus === 'loading'" />
-          <span v-else>Comment</span>
-        </button>
-      </form>
-    </template>
-  </div>
+  <RouterLink
+    v-if="!userStore.user"
+    to="/sign-in"
+    class="self-start rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md"
+  >
+    Sign in to comment
+  </RouterLink>
+  <template v-else>
+    <ErrorWrapper v-if="postCommentStatus === 'error'">
+      <h4 class="font-bold">Unknown error has occured on posting comment</h4>
+    </ErrorWrapper>
+    <form action="" method="post" @submit="onSubmit">
+      <CustomFormField input-type="textarea" :rows="3" name="body" label="Your comment" />
+      <button
+        class="mt-2 flex h-8 w-28 items-center justify-center self-start rounded-md bg-sky-900 px-4 py-1 text-white hover:shadow-md"
+      >
+        <LoadingSpinner v-if="postCommentStatus === 'loading'" />
+        <span v-else>Comment</span>
+      </button>
+    </form>
+  </template>
 </template>
