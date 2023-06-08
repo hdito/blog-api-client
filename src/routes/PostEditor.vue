@@ -2,7 +2,7 @@
 import CustomFormField from '@/components/CustomFormField.vue'
 import ErrorWrapper from '@/components/ErrorWrapper.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
-import { EditorPostSchema } from '@/schemas/editorPostSchema'
+import { EditorPostSchema } from '@/schemas/formSchemas/editorPostSchema'
 import { PostPostResponseSchema } from '@/schemas/postPostResponseSchema'
 import type { Post } from '@/schemas/postSchema'
 import { useUserStore } from '@/userStore'

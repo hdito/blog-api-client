@@ -9,7 +9,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { ref } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
-import { signInFormSchema } from '../schemas/signInFormSchema'
+import { signInFormSchema } from '@/schemas/formSchemas/signInFormSchema'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 
 const router = useRouter()

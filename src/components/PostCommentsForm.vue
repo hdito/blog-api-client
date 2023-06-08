@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CommentFormSchema } from '@/schemas/commentFormSchema'
+import { CommentFormSchema } from '@/schemas/formSchemas/commentFormSchema'
 import { useUserStore } from '@/userStore'
 import { blogApi } from '@/utils/blogApi'
 import { queryPostsKey } from '@/utils/queryPostsKeys'
