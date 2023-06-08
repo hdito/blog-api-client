@@ -17,6 +17,9 @@ declare module '@vue/runtime-core' {
     MyPostCard: typeof import('./src/components/MyPostCard.vue')['default']
     PasswordInput: typeof import('./src/components/PasswordInput.vue')['default']
     PostCard: typeof import('./src/components/PostCard.vue')['default']
+    PostComments: typeof import('./src/components/PostComments.vue')['default']
+    PostCommentsForm: typeof import('./src/components/PostCommentsForm.vue')['default']
+    PostCommentsList: typeof import('./src/components/PostCommentsList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

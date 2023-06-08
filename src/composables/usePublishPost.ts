@@ -8,14 +8,14 @@ export const usePublishPost = () => {
   const queryClient = useQueryClient()
 
   const { mutate: mutateIsPublished } = useMutation({
-    mutationFn: ({ postId, value }: { postId: string; value: boolean }) =>
+    mutationFn: ({ postId, isPublished }: { postId: string; isPublished: boolean }) =>
       blogApi
         .url(`/posts/${postId}`)
         .auth(`Bearer ${userStore.userToken}`)
         .put({
-          isPublished: value
+          isPublished
         })
-        .json(() => ({ postId, isPublished: value })),
+        .json(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryPostsKey.all })
       queryClient.invalidateQueries({ queryKey: queryPostsKey.my })
@@ -23,10 +23,10 @@ export const usePublishPost = () => {
   })
 
   function publishPost(postId: string) {
-    mutateIsPublished({ postId, value: true })
+    mutateIsPublished({ postId, isPublished: true })
   }
   function unpublishPost(postId: string) {
-    mutateIsPublished({ postId, value: false })
+    mutateIsPublished({ postId, isPublished: false })
   }
 
   return { publishPost, unpublishPost }

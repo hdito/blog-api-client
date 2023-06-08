@@ -10,6 +10,8 @@ import { useUserStore } from '@/userStore'
 import { successResponseWrapper } from '@/schemas/successResponseWrapper'
 import { z } from 'zod'
 import { PostSchema } from '@/schemas/postSchema'
+import PostComments from '@/components/PostComments.vue'
+import { queryPostsKey } from '@/utils/queryPostsKeys'
 
 const userStore = useUserStore()
 
@@ -17,7 +19,7 @@ const route = useRoute()
 const { postId } = route.params
 const { type } = route.query
 const { data: post, status } = useQuery({
-  queryKey: ['posts', postId],
+  queryKey: queryPostsKey.post(postId as string),
   queryFn: () => {
     if (type === 'preview') {
       return blogApi
@@ -47,5 +49,6 @@ const { data: post, status } = useQuery({
       {{ DateTime.fromISO(post!.createdAt).toLocaleString(DateTime.DATE_FULL) }}
     </p>
     <p class="whitespace-pre" v-if="post!.content">{{ post!.content }}</p>
+    <PostComments />
   </div>
 </template>

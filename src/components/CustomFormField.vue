@@ -8,6 +8,8 @@ type CustomFormFieldProps = {
   name: string
   inputType: 'email' | 'text' | 'password' | 'textarea'
   allowGrowth?: boolean
+  cols?: number
+  rows?: number
 }
 
 const props = withDefaults(defineProps<CustomFormFieldProps>(), { allowGrowth: false })
@@ -19,10 +21,10 @@ const props = withDefaults(defineProps<CustomFormFieldProps>(), { allowGrowth: f
     <PasswordInput
       :class="props.allowGrowth ? '' : 'self-start'"
       :name="props.name"
-      v-if="inputType === 'password'"
+      v-if="props.inputType === 'password'"
     />
     <Field
-      v-else-if="inputType === 'textarea'"
+      v-else-if="props.inputType === 'textarea'"
       v-slot="{ value, handleChange, handleBlur }"
       :name="props.name"
     >
@@ -32,8 +34,8 @@ const props = withDefaults(defineProps<CustomFormFieldProps>(), { allowGrowth: f
         @input="handleChange"
         @blur="handleBlur"
         :id="props.name"
-        cols="30"
-        rows="10"
+        :cols="props.cols ? props.cols : 30"
+        :rows="props.rows ? props.rows : 10"
       />
     </Field>
     <Field
