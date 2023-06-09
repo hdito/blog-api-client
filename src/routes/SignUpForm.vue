@@ -47,7 +47,8 @@ const isSigningUp = ref(false)
     class="mb-4 w-fit rounded-md border border-emerald-900 bg-emerald-300/50 px-3 py-2 text-emerald-900"
     v-if="formStatus === 'success'"
   >
-    Signed up successfully! Now you can <a class="font-bold" href="/sign-in">sign in</a>
+    Signed up successfully! Now you can
+    <RouterLink to="/sign-in" class="font-bold">sign in</RouterLink>
   </div>
   <ErrorWrapper class="mb-4" v-else-if="formStatus === 'error'">
     <h3 class="font-bold" v-if="typeof formErrors === 'string'">{{ formErrors }}</h3>
