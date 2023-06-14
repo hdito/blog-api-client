@@ -6,6 +6,7 @@ import SignUpForm from './routes/SignUpForm.vue'
 import MyPosts from './routes/MyPosts.vue'
 import PostEditor from './routes/PostEditor.vue'
 import PostEditorQueryWrapper from './routes/PostEditorQueryWrapper.vue'
+import AdminDashboard from './routes/AdminDashboard.vue'
 import { useUserStore } from './userStore'
 
 const router = createRouter({
@@ -20,6 +21,7 @@ const router = createRouter({
     { path: '/sign-up', component: SignUpForm },
     { path: '/my-posts', component: MyPosts, meta: { requiresAuth: true } },
     { path: '/new-post', component: PostEditor, meta: { requiresAuth: true } },
+    { path: '/dashboard', component: AdminDashboard, meta: { requiresAdmin: true } },
     {
       path: '/edit/:postId',
       component: PostEditorQueryWrapper,
@@ -32,6 +34,7 @@ const router = createRouter({
 router.beforeEach((to) => {
   const userStore = useUserStore()
   if (to.meta.requiresAuth && !userStore.user) return { path: '/' }
+  if (to.meta.requiresAdmin && userStore.user?.role !== 'admin') return { path: '/' }
 })
 
 export default router

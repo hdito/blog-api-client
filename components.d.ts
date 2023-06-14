@@ -22,5 +22,6 @@ declare module '@vue/runtime-core' {
     PostCommentsList: typeof import('./src/components/PostCommentsList.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    UserRow: typeof import('./src/components/UserRow.vue')['default']
   }
 }

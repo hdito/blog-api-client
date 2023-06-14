@@ -28,6 +28,12 @@ function logOut() {
         active-class="underline decoration-2 underline-offset-2"
         >My posts</RouterLink
       >
+      <RouterLink
+        v-if="userStore.user?.role === 'admin'"
+        to="/dashboard"
+        active-class="underline decoration-2 underline-offset-2"
+        >Dashboard</RouterLink
+      >
     </div>
     <div class="ml-auto flex items-center gap-2">
       <p class="font-bold" v-if="userStore.user">{{ userStore.user.displayName }}</p>
