@@ -57,7 +57,7 @@ const { mutate: updatePost, status: updateStatus } = useMutation({
     blogApi
       .auth(`Bearer ${userStore.userToken}`)
       .url(`/posts/${postId.value}`)
-      .put({ ...values })
+      .patch({ ...values })
       .json(() => ({ postId: postId.value!, values })),
 
   onSuccess: ({ postId, values }) => {

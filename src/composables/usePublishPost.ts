@@ -12,7 +12,7 @@ export const usePublishPost = () => {
       blogApi
         .url(`/posts/${postId}`)
         .auth(`Bearer ${userStore.userToken}`)
-        .put({
+        .patch({
           isPublished
         })
         .json(),
