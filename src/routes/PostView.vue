@@ -48,7 +48,7 @@ const { data: post, status } = useQuery({
     <p class="mb-4 italic">
       {{ DateTime.fromISO(post!.createdAt).toLocaleString(DateTime.DATE_FULL) }}
     </p>
-    <p class="whitespace-pre" v-if="post!.content">{{ post!.content }}</p>
+    <p class="whitespace-pre-wrap" v-if="post!.content">{{ post!.content }}</p>
     <PostComments />
   </div>
 </template>

@@ -20,7 +20,7 @@ function logOut() {
 
 <template>
   <header class="flex items-center gap-4 px-4 py-2">
-    <div class="flex items-baseline gap-8">
+    <div class="flex items-center gap-4 md:items-baseline md:gap-8">
       <RouterLink class="text-4xl font-bold" to="/">Blog</RouterLink>
       <RouterLink
         v-if="userStore.user?.role === 'author' || userStore.user?.role === 'admin'"

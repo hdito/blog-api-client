@@ -59,7 +59,7 @@ const { mutate: updateRole, status } = useMutation({
         v-else
         action=""
         method="post"
-        class="relative flex items-center gap-4"
+        class="relative flex flex-col items-center gap-4 md:flex-row"
         @submit.prevent="onSubmit"
       >
         <div>
@@ -84,7 +84,7 @@ const { mutate: updateRole, status } = useMutation({
         </div>
         <div
           v-if="values.role !== user.role"
-          class="absolute flex translate-x-full items-center gap-2"
+          class="flex flex-col items-center gap-2 md:absolute md:translate-x-full md:flex-row"
         >
           <button
             type="submit"

@@ -28,7 +28,7 @@ const { data: users, status } = useQuery({
   <ErrorWrapper v-else-if="status === 'error'">
     Error has occured on loading users. Try again later.
   </ErrorWrapper>
-  <table v-else class="border-separate border-spacing-x-8 border-spacing-y-4">
+  <table v-else class="border-separate border-spacing-2 border-spacing-y-4 md:border-spacing-x-8">
     <thead>
       <tr class="text-left">
         <th>Username</th>
