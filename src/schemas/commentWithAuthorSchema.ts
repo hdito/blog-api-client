@@ -4,7 +4,7 @@ export const CommentWithAuthorSchema = z.object({
   body: z.string(),
   author: z.object({
     _id: z.string(),
-    username: z.string()
+    displayName: z.string()
   }),
   _id: z.string(),
   createdAt: z.string()

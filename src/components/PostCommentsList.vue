@@ -18,7 +18,7 @@ const { comments, commentsStatus } = useComments()
   >
   <div v-else class="flex flex-col gap-4">
     <div v-for="comment in comments" :key="comment._id" class="relative">
-      <p class="font-bold">{{ comment.author.username }}</p>
+      <p class="font-bold">{{ comment.author.displayName }}</p>
       <p class="text-sm italic">
         {{ DateTime.fromISO(comment.createdAt).toLocaleString(DateTime.DATE_FULL) }}
       </p>

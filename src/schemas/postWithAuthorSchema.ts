@@ -7,7 +7,7 @@ export const PostWithAuthorSchema = z.object({
   createdAt: z.string(),
   _id: z.string(),
   isPublished: z.boolean(),
-  author: z.object({ _id: z.string(), username: z.string() })
+  author: z.object({ _id: z.string(), displayName: z.string() })
 })
 
 export type PostWithAuthor = z.infer<typeof PostWithAuthorSchema>

@@ -18,7 +18,7 @@ const { post } = toRefs(props)
       <h2 class="text-xl font-bold">{{ post.title }}</h2>
     </RouterLink>
     <span>
-      By <span class="font-bold">{{ post.author.username }}</span> •
+      By <span class="font-bold">{{ post.author.displayName }}</span> •
     </span>
     <span class="italic">
       {{ DateTime.fromISO(post.createdAt).toLocaleString(DateTime.DATE_FULL) }}

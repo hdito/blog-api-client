@@ -30,7 +30,7 @@ function logOut() {
       >
     </div>
     <div class="ml-auto flex items-center gap-2">
-      <p class="font-bold" v-if="userStore.user?.username">{{ userStore.user.username }}</p>
+      <p class="font-bold" v-if="userStore.user">{{ userStore.user.displayName }}</p>
       <button
         class="rounded-md border border-sky-900 px-2 py-1 hover:shadow-md"
         v-if="userStore.user"
