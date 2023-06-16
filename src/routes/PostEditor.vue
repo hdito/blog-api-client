@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import CustomFormField from '@/components/CustomFormField.vue'
-import ErrorWrapper from '@/components/ErrorWrapper.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import { EditorPostSchema } from '@/schemas/formSchemas/editorPostSchema'
 import { PostPostResponseSchema } from '@/schemas/postPostResponseSchema'
@@ -12,6 +11,7 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { ref } from 'vue'
+import { useToast } from 'vue-toastification'
 
 const props = defineProps<{ post?: Post }>()
 
@@ -29,6 +29,8 @@ const { handleSubmit } = useForm({
 const userStore = useUserStore()
 const queryClient = useQueryClient()
 
+const toast = useToast()
+
 const { mutate: postPost, status: postStatus } = useMutation({
   mutationFn: (values: { title: string; description?: string; content?: string }) =>
     blogApi
@@ -40,15 +42,12 @@ const { mutate: postPost, status: postStatus } = useMutation({
         postId.value = post._id
         return { postId: postId.value, post }
       }),
-  onSuccess: ({ postId, post }) => {
-    queryClient.setQueryData(queryPostsKey.post(postId), { ...post })
-    queryClient.setQueryData(queryPostsKey.my, (prev) => {
-      if (!prev) return
-      return [post, ...(prev as Post[])]
-    })
+  onSuccess: () => {
+    toast.success('Saved')
+    queryClient.invalidateQueries({ queryKey: queryPostsKey.all })
   },
-  onSettled: () => {
-    isSaving.value = false
+  onError: () => {
+    toast.error('Unknown error on save. Try again later')
   }
 })
 
@@ -60,27 +59,17 @@ const { mutate: updatePost, status: updateStatus } = useMutation({
       .patch({ ...values })
       .json(() => ({ postId: postId.value!, values })),
 
-  onSuccess: ({ postId, values }) => {
-    queryClient.setQueryData(queryPostsKey.post(postId), (prev) => {
-      if (!prev) return
-      return { ...(prev as Post), ...values }
-    })
-    queryClient.setQueryData(queryPostsKey.my, (prev) => {
-      if (!prev) return
-      return (prev as Post[]).map((post) => (post._id === postId ? { ...post, ...values } : post))
-    })
-    queryClient.setQueryData(queryPostsKey.all, (prev) => {
-      if (!prev) return
-      return (prev as Post[]).map((post) => (post._id === postId ? { ...post, ...values } : post))
-    })
+  onSuccess: () => {
+    toast.success('Saved')
+
+    queryClient.invalidateQueries({ queryKey: queryPostsKey.all })
   },
-  onSettled: () => {
-    isSaving.value = false
+  onError: () => {
+    toast.error('Unknown error on save. Try again later')
   }
 })
 
 const onSubmit = handleSubmit((values) => {
-  isSaving.value = true
   if (postId.value === null) {
     postPost(values)
     return
@@ -89,13 +78,9 @@ const onSubmit = handleSubmit((values) => {
 })
 
 const postId = ref<string | null>(props.post?._id ? props.post._id : null)
-const isSaving = ref(false)
 </script>
 
 <template>
-  <ErrorWrapper class="mb-4" v-if="postStatus === 'error' || updateStatus === 'error'">
-    Error has occured on save. Try again later
-  </ErrorWrapper>
   <form class="flex flex-1 flex-col gap-4" action="" @submit.prevent="onSubmit">
     <CustomFormField input-type="text" label="Title" name="title" :allow-growth="true" />
     <CustomFormField

@@ -4,12 +4,15 @@ import { queryPostsKey } from '@/utils/queryPostsKeys'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { useUserStore } from '../userStore'
 import { useRoute } from 'vue-router'
+import { useToast } from 'vue-toastification'
 
 export const useDeleteComment = () => {
   const userStore = useUserStore()
 
   const route = useRoute()
   const { postId } = route.params
+
+  const toast = useToast()
 
   const queryClient = useQueryClient()
 
@@ -21,9 +24,13 @@ export const useDeleteComment = () => {
         .delete()
         .res(() => commentId),
     onSuccess: (commentId) => {
+      toast.success('Comment deleted!')
       queryClient.setQueryData(queryPostsKey.postComments(postId as string), (prev) =>
         (prev as CommentWithAuthor[]).filter((comment) => comment._id !== commentId)
       )
+    },
+    onError: () => {
+      toast.error('Unknown error on deleting comment. Try again later')
     }
   })
   return { deleteComment }

@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { useRoute } from 'vue-router'
+import { useToast } from 'vue-toastification'
 
 const userStore = useUserStore()
 
@@ -14,6 +15,8 @@ const route = useRoute()
 const { postId } = route.params
 
 const queryClient = useQueryClient()
+
+const toast = useToast()
 
 const { mutate: postComment, status: postCommentStatus } = useMutation({
   mutationFn: (values: { body: string }) =>
@@ -23,8 +26,12 @@ const { mutate: postComment, status: postCommentStatus } = useMutation({
       .post(values)
       .json(() => {}),
   onSuccess: () => {
+    toast.success('Comment created!')
     queryClient.invalidateQueries({ queryKey: queryPostsKey.postComments(postId as string) })
     resetForm()
+  },
+  onError: () => {
+    toast.error('Unknwon error on posting comment. Try again later')
   }
 })
 
@@ -45,9 +52,6 @@ const onSubmit = handleSubmit((values) => {
     Sign in to comment
   </RouterLink>
   <template v-else>
-    <ErrorWrapper v-if="postCommentStatus === 'error'">
-      <h4 class="font-bold">Unknown error has occured on posting comment</h4>
-    </ErrorWrapper>
     <form action="" method="post" @submit="onSubmit">
       <CustomFormField input-type="textarea" :rows="3" name="body" label="Your comment" />
       <button
