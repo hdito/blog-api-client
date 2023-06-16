@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import PostsList from '@/pages/postsList/PostsList.vue'
 import PostView from '@/pages/postView/PostView.vue'
-import SignInForm from '@/pages/SignInForm.vue'
+import SignInForm from '@/pages/signIn/SignInForm.vue'
 import SignUpForm from '@/pages/SignUpForm.vue'
 import MyPosts from '@/pages/myPosts/MyPosts.vue'
 import PostEditor from '@/pages/postEditor/PostEditor.vue'
