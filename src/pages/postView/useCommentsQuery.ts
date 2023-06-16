@@ -6,11 +6,11 @@ import { useQuery } from '@tanstack/vue-query'
 import { useRoute } from 'vue-router'
 import { z } from 'zod'
 
-export const useComments = () => {
+export const useCommentsQuery = () => {
   const route = useRoute()
   const { postId } = route.params
 
-  const { data: comments, status: commentsStatus } = useQuery({
+  const { data: comments, status: commentsLoadingStatus } = useQuery({
     queryKey: queryPostsKey.postComments(postId as string),
     queryFn: () =>
       blogApi.get(`/posts/${postId}/comments`).json((data) => {
@@ -22,5 +22,5 @@ export const useComments = () => {
       })
   })
 
-  return { comments, commentsStatus }
+  return { comments, commentsLoadingStatus }
 }

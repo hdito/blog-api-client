@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import ErrorWrapper from '@/components/ErrorWrapper.vue'
 import LoadingSpinner from '@/components/LoadingSpinner.vue'
-import MyPostCard from '@/components/MyPostCard.vue'
-import { useMyPosts } from '@/composables/useMyPosts'
+import MyPostCard from './MyPostCard.vue'
+import { useMyPostsQuery } from './useMyPostsQuery'
 import { RouterLink } from 'vue-router'
 
-const { publishedPosts, unpublishedPosts, status } = useMyPosts()
+const { publishedPosts, unpublishedPosts, status } = useMyPostsQuery()
 </script>
 
 <template>

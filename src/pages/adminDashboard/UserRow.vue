@@ -7,7 +7,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm, Field } from 'vee-validate'
 import { toRefs } from 'vue'
 import { z } from 'zod'
-import LoadingSpinner from './LoadingSpinner.vue'
+import LoadingSpinner from '@/components/LoadingSpinner.vue'
 import { useUserStore } from '@/userStore'
 import { queryUsersKey } from '@/utils/queryUsersKey'
 

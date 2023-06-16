@@ -4,10 +4,10 @@ import { blogApi } from '@/utils/blogApi'
 import { useQuery } from '@tanstack/vue-query'
 import { computed } from 'vue'
 import { z } from 'zod'
-import { successResponseWrapper } from '../schemas/successResponseWrapper'
-import { queryPostsKey } from '../utils/queryPostsKeys'
+import { successResponseWrapper } from '@/schemas/successResponseWrapper'
+import { queryPostsKey } from '@/utils/queryPostsKeys'
 
-export const useMyPosts = () => {
+export const useMyPostsQuery = () => {
   const userStore = useUserStore()
 
   const { data: posts, status } = useQuery({

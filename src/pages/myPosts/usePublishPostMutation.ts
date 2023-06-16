@@ -4,7 +4,7 @@ import { queryPostsKey } from '@/utils/queryPostsKeys'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { useToast } from 'vue-toastification'
 
-export const usePublishPost = () => {
+export const usePublishPostMutation = () => {
   const userStore = useUserStore()
   const queryClient = useQueryClient()
 

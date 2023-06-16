@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { useComments } from '@/composables/useComments'
-import { useDeleteComment } from '@/composables/useDeleteComment'
+import { useDeleteCommentMutation } from './useDeleteCommentMutation'
 import { useUserStore } from '@/userStore'
 import { DateTime } from 'luxon'
 import IcRoundDeleteForever from '~icons/ic/round-delete-forever'
+import { useCommentsQuery } from './useCommentsQuery'
 
 const userStore = useUserStore()
 
-const { deleteComment } = useDeleteComment()
-const { comments, commentsStatus } = useComments()
+const { deleteComment } = useDeleteCommentMutation()
+const { comments, commentsLoadingStatus } = useCommentsQuery()
 </script>
 
 <template>
-  <LoadingSpinner v-if="commentsStatus === 'loading'" />
-  <ErrorWrapper v-else-if="commentsStatus === 'error'"
+  <LoadingSpinner v-if="commentsLoadingStatus === 'loading'" />
+  <ErrorWrapper v-else-if="commentsLoadingStatus === 'error'"
     >Error occured on loading comments</ErrorWrapper
   >
   <div v-else class="flex flex-col gap-4">

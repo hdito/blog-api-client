@@ -2,8 +2,8 @@
 import type { Post } from '@/schemas/postSchema'
 import { toRefs } from 'vue'
 import { DateTime } from 'luxon'
-import { usePublishPost } from '@/composables/usePublishPost'
-import { useDeletePost } from '@/composables/useDeletePost'
+import { usePublishPostMutation } from './usePublishPostMutation'
+import { useDeletePostMutation } from './useDeletePostMutation'
 
 type MyPostCardProps = {
   post: Post
@@ -12,8 +12,8 @@ type MyPostCardProps = {
 const props = defineProps<MyPostCardProps>()
 const { post } = toRefs(props)
 
-const { publishPost, unpublishPost } = usePublishPost()
-const { deletePost } = useDeletePost()
+const { publishPost, unpublishPost } = usePublishPostMutation()
+const { deletePost } = useDeletePostMutation()
 </script>
 
 <template>
