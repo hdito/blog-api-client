@@ -4,7 +4,7 @@ App for demonstration functionality of [blog-api](https://github.com/hdito/blog-
 
 ## Project Setup
 
-1. After successful start of blog-api server pass its URL to env variable `VITE_API_URL` in `.env.development`.
+1. After successful start of blog-api server pass its URL to env variable `VITE_API_URL` in the file `.env.development` placed in the root.
 
 2. Install dependencies
 
@@ -12,7 +12,7 @@ App for demonstration functionality of [blog-api](https://github.com/hdito/blog-
 pnpm install
 ```
 
-3. Start developer server
+3. Start development server
 
 ```sh
 pnpm dev
