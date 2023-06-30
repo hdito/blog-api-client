@@ -10,6 +10,6 @@ export const signInFormSchema = z.union([
   }),
   z.object({
     email: emailSchema,
-    passwod: passwordSchema
+    password: passwordSchema
   })
 ])

@@ -27,7 +27,7 @@ export const useSignIn = () => {
           }
         | {
             email: string
-            passwod: string
+            password: string
           }
     ) =>
       blogApi
