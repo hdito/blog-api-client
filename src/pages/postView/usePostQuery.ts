@@ -21,7 +21,7 @@ export const usePostQuery = () => {
       if (type === 'preview') {
         return blogApi
           .auth(`Bearer ${userStore.userToken}`)
-          .get(`/posts/${postId}?type=preview`)
+          .get(`/my-posts/${postId}`)
           .json((data) => {
             const parsedData = successResponseWrapper(z.object({ post: PostSchema })).parse(data)
             return parsedData.data.post

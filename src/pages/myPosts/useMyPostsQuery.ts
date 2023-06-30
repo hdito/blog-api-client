@@ -15,7 +15,7 @@ export const useMyPostsQuery = () => {
     queryFn: () =>
       blogApi
         .auth(`Bearer ${userStore.userToken}`)
-        .get('/posts?type=own')
+        .get('/my-posts')
         .json((data) => {
           const parsedData = successResponseWrapper(z.object({ posts: z.array(PostSchema) })).parse(
             data
